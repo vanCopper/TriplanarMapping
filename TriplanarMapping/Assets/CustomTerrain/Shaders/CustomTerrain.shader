@@ -55,9 +55,9 @@ Shader "Copper/Terrain/TriplanarMapping"
 
             half4 frag(v2f i) : COLOR 
             {  
-                float2 uv_x = TRANSFORM_TEX(i.worldPos.zy, _Basemap);
-                float2 uv_y = TRANSFORM_TEX(i.worldPos.xz, _Basemap);
-                float2 uv_z = TRANSFORM_TEX(i.worldPos.xy, _Basemap);
+                float2 uv_x = TRANSFORM_TEX(i.worldPos.zy, _Basemap); // x 平面
+                float2 uv_y = TRANSFORM_TEX(i.worldPos.xz, _Basemap); // y 平面
+                float2 uv_z = TRANSFORM_TEX(i.worldPos.xy, _Basemap); // z 平面
 
                 half4 col_x = tex2D(_Basemap, uv_x);
                 half4 col_y = tex2D(_Basemap, uv_y);
