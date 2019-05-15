@@ -4,7 +4,9 @@
 
 ![](Images/Terrain_01.png)
 
+**GPU Gems 3**在章节**[Generating Complex Procedural Terrains Using the GPU](https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch01.html)**中提出使用**Triplanar Mapping**技术来处理立面中纹理拉伸问题。
 
+![](./images/Project.png)
 
 
 
