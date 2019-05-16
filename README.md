@@ -6,17 +6,17 @@
 
 **GPU Gems 3** 在章节[Generating Complex Procedural Terrains Using the GPU](https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch01.html)中提到使用Triplanar Mapping技术来处理立面中纹理拉伸问题。先来理解一下解决思路。
 
-![](./images/Project.png)
+![](./Images/Project.png)
 
 如上图，我们用ab，bc代表悬崖的两个侧面。Pa，Pb，Pc表示三个点在Y轴上的投影位置，Pa'，Pb'，Pc'，表示三个点在X轴上的投影位置。可以看到ab在Y轴上的投影距离大于X轴上的投影距离，bc则是X轴上的投影距离大于Y轴上的投影距离。所以为了让纹理坐标跨越较大范围，ab的UV应该使用其在Y轴上的投影，bc的UV应该使用其在X轴上的投影。
 
 接下来验证一下，利用高度图拉起的地形中，UV坐标一般是使用顶点的世界坐标的xz，上图中**Unity Terrain**就是使用顶点坐标的xz来做UV的效果。我们首先将UV换成zy平面坐标来看下效果：
 
-![](./images/Terrain_02.png)
+![](./Images/Terrain_02.png)
 
 可以明显看到部分立面的拉伸已经得到很大的改善。再将UV换成xy平面坐标：
 
-![](./images/Terrain_03.png)
+![](./Images/Terrain_03.png)
 
 可以看到，由于观察角度不同就需要使用不同平面坐标来进行采样。比如沿x轴观察使用yz平面更容易获得好的采样结果。**Triplanar Mapping**技术会对三个平面分别进行采样，然后根据法线(WorldSpace)计算出权重来做最终混合，从而得到比较不错的效果。
 
@@ -51,7 +51,7 @@ half4 frag(v2f i) : COLOR
 }
 ```
 
-![](./images/Terrain_04.png)
+![](./Images/Terrain_04.png)
 
 **GPU Gems 3**的Triplanar Mapping实现效果基本上就是上图的样子，但感觉混合效果并不是很好。三次采样直接混合在一起导致画面稍微有些杂乱，这里可以使用`pow`处理混合权重，这样原本低的权重值会更低，而又不会改变最高值，进而减少权重低的混合。
 
@@ -61,7 +61,7 @@ blend_weights = pow(weights, 64);
 blend_weights  = blend_weights  / (blend_weights.x + blend_weights.y + blend_weights.z);
 ```
 
-![](./images/Terrain_05.png)
+![](./Images/Terrain_05.png)
 
 > <https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch01.html>
 >
