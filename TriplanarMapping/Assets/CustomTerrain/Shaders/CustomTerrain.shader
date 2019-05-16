@@ -63,25 +63,20 @@ Shader "Copper/Terrain/TriplanarMapping"
                 half4 col_y = tex2D(_Basemap, uv_y);
 				half4 col_z = tex2D(_Basemap, uv_z);
 
-                half3 weights = i.worldNormal;
-                weights = abs(weights);
-                weights = pow(weights, 64);
-                weights = weights / (weights.x + weights.y + weights.z);
+                half3 blend_weights = abs(i.worldNormal);
+                blend_weights = pow(blend_weights, 64);
+                blend_weights  = blend_weights  / (blend_weights.x + blend_weights.y + blend_weights.z);
 
-                col_x *= weights.x;
-                col_y *= weights.y;
-                col_z *= weights.z;
+                col_x *= blend_weights.x;
+                col_y *= blend_weights.y;
+                col_z *= blend_weights.z;
             
                 Light mainLight = GetMainLight();
                 half3 lightDir = mainLight.direction;
                 half3 NdotL = max(0, dot(i.worldNormal, lightDir));
                 half4 light = half4(NdotL * mainLight.color.xyz + SampleSH(i.worldNormal).xyz, 1);
 				 
-                // float2 uv = TRANSFORM_TEX(i.worldPos, _Basemap);
-                // half4 diffuse = tex2D(_Basemap, uv);
-                
                 half4 diffuse = col_x + col_y + col_z;
-
 				half4 color = diffuse * light;
 				
                 return color;
